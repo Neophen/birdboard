@@ -1,22 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible"
-		content="ie=edge">
-	<title>Birdboard</title>
-</head>
+@section('content')
+<section class="container mx-auto">
 
-<body>
-	<h1>Birdboard</h1>
 
-	<ul>
+	<div class="flex items-center mb-4">
+		<h1 class="text-3xl mr-auto">Birdboard</h1>
+		<a href="{{ route('projects.create') }}" class="btn">New Project</a>
+	</div>
+
+	<ul class="">
 		@forelse($projects as $project)
 		<li>
-			<a href="{{ $project->path() }}">
+			<a href="{{ $project->path() }}" class="underline hover:text-teal-500">
 				{{ $project->title }}
 			</a>
 		</li>
@@ -24,6 +20,5 @@
 		<p>No projects yet.</p>
 		@endforelse
 	</ul>
-</body>
-
-</html>
+</section>
+@endsection

@@ -38,4 +38,12 @@ class ProjectsController extends Controller
             'project' => $project
         ]);
     }
+
+    public function create()
+    {
+        // if (!auth()->check()) {
+        //     abort(403);
+        // }
+        return view('projects.create');
+    }
 }

@@ -5109,6 +5109,10 @@ video {
   min-width: 100%;
 }
 
+.min-w-project-card {
+  min-width: 300px;
+}
+
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
@@ -11401,8 +11405,10 @@ video {
   z-index: auto;
 }
 
+html,
 body {
-  background-color: #f7fafc;
+  height: 100%;
+  background-color: #38b2ac;
 }
 
 .nav-btn {
@@ -11490,6 +11496,27 @@ body {
   color: #f56565;
   font-size: 0.75rem;
   font-style: italic;
+}
+
+.card {
+  border-radius: 0.5rem;
+  background-color: #fff;
+  position: relative;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  height: 100%;
+  padding: 1rem;
+}
+
+.highlight {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  line-height: 1.25;
+}
+
+.highlight:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
 @media (min-width: 640px) {
@@ -15973,6 +16000,10 @@ body {
 
   .sm\:min-w-full {
     min-width: 100%;
+  }
+
+  .sm\:min-w-project-card {
+    min-width: 300px;
   }
 
   .sm\:object-contain {
@@ -26751,6 +26782,10 @@ body {
     min-width: 100%;
   }
 
+  .md\:min-w-project-card {
+    min-width: 300px;
+  }
+
   .md\:object-contain {
     -o-object-fit: contain;
        object-fit: contain;
@@ -37527,6 +37562,10 @@ body {
     min-width: 100%;
   }
 
+  .lg\:min-w-project-card {
+    min-width: 300px;
+  }
+
   .lg\:object-contain {
     -o-object-fit: contain;
        object-fit: contain;
@@ -48301,6 +48340,10 @@ body {
 
   .xl\:min-w-full {
     min-width: 100%;
+  }
+
+  .xl\:min-w-project-card {
+    min-width: 300px;
   }
 
   .xl\:object-contain {

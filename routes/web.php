@@ -11,12 +11,15 @@
 |
 */
 
-use App\Http\Controllers\ProjectsController;
-
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('projects', 'ProjectsController');
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::post('projects/{project}/tasks', 'ProjectTasksController@store');
+});
+
+
 Auth::routes();
-Route::resource('projects', 'ProjectsController');
-Route::get('/home', 'HomeController@index')->name('home');

@@ -1,24 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="container mx-auto">
+<div class="container mx-auto">
+	<header class="flex items-end mb-8">
+		<p class="text-sm font-light text-gray-500 mr-auto">{{ __('My projects') }}</p>
+		<a href="{{ route('projects.create') }}"
+			class="btn text-gray-500">{{ __('New Project') }}</a>
+	</header>
+	<main>
 
-
-	<div class="flex items-center mb-4">
-		<h1 class="text-3xl mr-auto">Birdboard</h1>
-		<a href="{{ route('projects.create') }}" class="btn">New Project</a>
-	</div>
-
-	<ul class="">
-		@forelse($projects as $project)
-		<li>
-			<a href="{{ $project->path() }}" class="underline hover:text-teal-500">
-				{{ $project->title }}
-			</a>
-		</li>
-		@empty
-		<p>No projects yet.</p>
-		@endforelse
-	</ul>
-</section>
+		<ul class="flex flex-wrap -mx-3">
+			@forelse($projects as $project)
+			<li class="w-full md:w-1/2 xl:w-1/3 px-3 mb-6">
+				@include('projects.card')
+			</li>
+			@empty
+			<p>{{ __('No projects yet') }}</p>
+			@endforelse
+		</ul>
+	</main>
+</div>
 @endsection

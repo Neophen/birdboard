@@ -5,8 +5,10 @@
 @tailwind utilities;
 
 
+html,
 body {
-	@apply bg-gray-100
+    height: 100%;
+		@apply bg-teal-500;
 }
 
 .nav-btn {
@@ -48,4 +50,17 @@ body {
 
 .input__error {
 	@apply text-red-500 text-xs italic;
+}
+
+
+.card {
+	@apply rounded-lg bg-white relative shadow h-full p-4;
+}
+
+.highlight {
+	@apply appearance-none leading-tight;
+
+	&:focus {
+		@apply outline-none shadow-outline;
+	}
 }

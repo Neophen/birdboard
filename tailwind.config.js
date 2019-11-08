@@ -1,7 +1,12 @@
 module.exports = {
   theme: {
-    extend: {}
+    extend: {
+      minWidth : {
+        'project-card': '300px'
+      }
+    }
   },
-  variants: {},
+  variants: {
+  },
   plugins: []
 }

@@ -21,12 +21,12 @@ class ProjectsController extends Controller
 
     public function store()
     {
-        auth()->user()->projects()->create(request()->validate([
+        $project = auth()->user()->projects()->create(request()->validate([
             'title' => 'required|max:255',
             'description' => 'required',
         ]));
 
-        return redirect(route('projects.index'));
+        return redirect($project->path());
     }
 
     public function show(Project $project)
@@ -41,9 +41,9 @@ class ProjectsController extends Controller
 
     public function create()
     {
-        // if (!auth()->check()) {
-        //     abort(403);
-        // }
+        if (!auth()->check()) {
+            abort(403);
+        }
         return view('projects.create');
     }
 }

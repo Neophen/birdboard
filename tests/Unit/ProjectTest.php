@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Project;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -14,7 +15,7 @@ class ProjectTest extends TestCase
     /** @test **/
     public function it_has_a_path()
     {
-        $project = factory('App\Project')->create();
+        $project = factory(Project::class)->create();
 
         $this->assertEquals("/projects/{$project->id}", $project->path());
     }
@@ -24,7 +25,7 @@ class ProjectTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $project = factory('App\Project')->create();
+        $project = factory(Project::class)->create();
 
         $this->assertInstanceOf(User::class, $project->owner);
     }
@@ -33,7 +34,7 @@ class ProjectTest extends TestCase
     public function it_can_add_a_task()
     {
         $this->withoutExceptionHandling();
-        $project = factory('App\Project')->create();
+        $project = factory(Project::class)->create();
 
         $task = $project->addTask('Smile more');
 

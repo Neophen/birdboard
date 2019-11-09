@@ -7,6 +7,7 @@ use App\Task;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Facades\Tests\Setup\ProjectFactory;
 
 class ProjectTasksTest extends TestCase
 {
@@ -15,7 +16,7 @@ class ProjectTasksTest extends TestCase
     /** @test **/
     public function guest_cannot_add_tasks_to_projects()
     {
-        $project = factory(Project::class)->create();
+        $project = ProjectFactory::create();
 
         $this->post($project->path() . '/tasks')->assertRedirect('login');
     }
@@ -25,7 +26,7 @@ class ProjectTasksTest extends TestCase
     {
         $this->signIn();
 
-        $project = factory(Project::class)->create();
+        $project = ProjectFactory::create();
 
         $this->post($project->path() . '/tasks', ['body' => 'Not my project'])->assertStatus(403);
 
@@ -37,11 +38,10 @@ class ProjectTasksTest extends TestCase
     {
         $this->signIn();
 
-        $project = factory(Project::class)->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
-        $task = $project->addTask("Take care of yourself, like of someone who you're responsible for");
-
-        $this->patch($task->path(), ['body' => 'Not my project'])->assertStatus(403);
+        $this->patch($project->tasks->first()->path(), ['body' => 'Not my project'])
+            ->assertStatus(403);
 
         $this->assertDatabaseMissing('tasks', ['body' => "Not my project"]);
     }
@@ -49,11 +49,10 @@ class ProjectTasksTest extends TestCase
     /** @test **/
     public function a_project_can_have_tasks()
     {
-        $this->signIn();
+        $project = ProjectFactory::create();
 
-        $project = auth()->user()->projects()->create(factory(Project::class)->raw());
-
-        $this->post($project->path() . '/tasks', ['body' => 'Buy flowers']);
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', ['body' => 'Buy flowers']);
 
         $this->get($project->path())
             ->assertSee('Buy flowers');
@@ -62,12 +61,9 @@ class ProjectTasksTest extends TestCase
     /** @test **/
     public function a_task_can_be_updated()
     {
-        $this->withoutExceptionHandling();
-        $this->signIn();
-        $project = auth()->user()->projects()->create(factory(Project::class)->raw());
-        $task = $project->addTask('Stand up straight');
+        $project = ProjectFactory::withTasks(1)->create();
 
-        $this->patch($task->path(), [
+        $this->actingAs($project->owner)->patch($project->tasks()->first()->path(), [
             'body' => 'With your shoulders back',
             'completed' => true,
         ]);
@@ -78,12 +74,11 @@ class ProjectTasksTest extends TestCase
     /** @test **/
     public function a_task_requires_a_body()
     {
-        $this->signIn();
+        $project = ProjectFactory::create();
 
-        $project = auth()->user()->projects()->create(factory(Project::class)->raw());
+        $attributes = factory(Task::class)->raw(['body' => '']);
 
-        $attributes = factory('App\Task')->raw(['body' => '']);
-
-        $this->post($project->path() . '/tasks', $attributes)->assertSessionHasErrors('body');
+        $this->actingAs($project->owner)->post($project->path() . '/tasks', $attributes)
+            ->assertSessionHasErrors('body');
     }
 }

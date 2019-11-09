@@ -30,7 +30,7 @@
                 @foreach ($project->tasks as $task)
                 <div class="card mb-3">
                     <form action="{{ $task->path() }}"
-                        method="post">
+                        method="POST">
                         @csrf
                         @method('PATCH')
                         <div class="flex">
@@ -49,8 +49,20 @@
             </div>
             <div>
                 <h2 class="text-md text-gray-500 mr-auto mb-4">{{ __('General notes') }}</h2>
-                <textarea class="card w-full highlight"
-                    rows="10"></textarea>
+                <form action="{{ $project->path() }}"
+                    method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <textarea name="notes"
+                        class="card w-full highlight mb-4"
+                        placeholder="{{ __("You can write anything here, be brave!") }}"
+                        rows="10">{{ $project->notes }}</textarea>
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        {{ __('Save notes') }}
+                    </button>
+
+                </form>
             </div>
         </main>
         <div class="lg:w-1/4 px-3 mt-8 lg:mt-0">

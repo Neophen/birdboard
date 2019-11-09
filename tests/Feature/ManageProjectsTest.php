@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Project;
+use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ManageProjectsTest extends TestCase
@@ -14,9 +16,10 @@ class ManageProjectsTest extends TestCase
     /** @test **/
     public function guests_cannot_manage_projects()
     {
-        $project = factory('App\Project')->create();
+        $project = ProjectFactory::create();
 
         $this->get($project->path())->assertRedirect('login');
+        $this->patch($project->path())->assertRedirect('login');
         $this->get(route('projects.index'))->assertRedirect('login');
         $this->get(route('projects.create'))->assertRedirect('login');
         $this->post(route('projects.index'), $project->toArray())->assertRedirect('login');
@@ -25,36 +28,53 @@ class ManageProjectsTest extends TestCase
     /** @test **/
     public function a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $this->get(route('projects.create'))->assertStatus(200);
 
         $attributes = [
             'title' => $this->faker()->sentence(),
-            'description' => $this->faker()->paragraph(),
+            'description' => $this->faker()->sentence(),
+            'notes' => $this->faker()->sentence(),
         ];
 
         $response = $this->post(route('projects.store'), $attributes);
 
-        $response->assertRedirect(Project::where($attributes)->first()->path());
+        $project = Project::where($attributes)->first();
+
+        $response->assertRedirect($project->path());
+
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    /** @test **/
+    public function a_user_can_update_a_project()
+    {
+        $project = ProjectFactory::create();
+        $attributes = ['notes' => 'updated'];
+
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes)
+            ->assertRedirect($project->path());
 
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get(route('projects.index'))->assertSee($attributes['title']);
+        $this->get($project->path())
+            ->assertSee($attributes['notes']);
     }
 
     /** @test **/
     public function a_user_can_view_their_project()
     {
-        $this->signIn();
+        $project = ProjectFactory::create();
 
-        $this->withoutExceptionHandling();
-
-        $project = factory('App\Project')->create(['owner_id' => auth()->id()]);
-
-        $this->get($project->path())->assertSee($project->title)->assertSee($project->description);
+        $this->actingAs($project->owner)
+            ->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee($project->description);
     }
 
     /** @test **/
@@ -62,9 +82,19 @@ class ManageProjectsTest extends TestCase
     {
         $this->signIn();
 
-        $project = factory('App\Project')->create();
+        $project = ProjectFactory::create();
 
         $this->get($project->path())->assertStatus(403);
+    }
+
+    /** @test **/
+    public function an_authenticated_user_cannot_update_the_projects_of_others()
+    {
+        $this->signIn();
+
+        $project = ProjectFactory::create();
+
+        $this->patch($project->path())->assertStatus(403);
     }
 
     /** @test **/
@@ -72,7 +102,7 @@ class ManageProjectsTest extends TestCase
     {
         $this->signIn();
 
-        $attributes = factory('App\Project')->raw(['title' => '']);
+        $attributes = factory(Project::class)->raw(['title' => '']);
 
         $this->post(route('projects.index'), $attributes)->assertSessionHasErrors('title');
     }
@@ -82,7 +112,7 @@ class ManageProjectsTest extends TestCase
     {
         $this->signIn();
 
-        $attributes = factory('App\Project')->raw(['description' => '']);
+        $attributes = factory(Project::class)->raw(['description' => '']);
 
         $this->post(route('projects.index'), $attributes)->assertSessionHasErrors('description');
     }

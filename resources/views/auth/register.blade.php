@@ -69,20 +69,20 @@
             </div>
 
             <div class="mb-6">
-                <label for="password-confirm"
+                <label for="password_confirmation"
                     class="label">
                     {{ __('Confirm Password') }}
                 </label>
 
-                <input id="password-confirm"
+                <input id="password_confirmation"
                     class="input @error('password-confirm') border-red-500 @enderror"
-                    type="password-confirm"
-                    name="password-confirm"
+                    type="password"
+                    name="password_confirmation"
                     required
                     autocomplete="new-password"
                     autofocus>
 
-                @error('password-confirm')
+                @error('password_confirmation')
                 <p role="alert"
                     class="input__error">{{ $message }}</p>
                 @enderror

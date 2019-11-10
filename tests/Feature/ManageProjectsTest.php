@@ -20,6 +20,7 @@ class ManageProjectsTest extends TestCase
 
         $this->get($project->path())->assertRedirect('login');
         $this->patch($project->path())->assertRedirect('login');
+        $this->get(route('projects.edit', $project))->assertRedirect('login');
         $this->get(route('projects.index'))->assertRedirect('login');
         $this->get(route('projects.create'))->assertRedirect('login');
         $this->post(route('projects.index'), $project->toArray())->assertRedirect('login');
@@ -54,7 +55,37 @@ class ManageProjectsTest extends TestCase
     public function a_user_can_update_a_project()
     {
         $project = ProjectFactory::create();
-        $attributes = ['notes' => 'updated'];
+        $attributes = [
+            'title' => 'Roses',
+            'notes' => 'are',
+            'description' => 'red',
+        ];
+
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes)
+            ->assertRedirect($project->path());
+
+        $this->get(route('projects.edit', $project))
+            ->assertOk()
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+
+        $this->assertDatabaseHas('projects', $attributes);
+
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    /** @test **/
+    public function a_user_can_update_a_projects_general_notes()
+    {
+        $project = ProjectFactory::create();
+        $attributes = [
+            'notes' => 'CHANGED',
+        ];
 
         $this->actingAs($project->owner)
             ->patch($project->path(), $attributes)

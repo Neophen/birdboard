@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container mx-auto">
     <header class="flex items-end mb-8">
         <p class="text-sm font-light text-gray-500 mr-4"><a
@@ -70,4 +71,5 @@
         </div>
     </div>
 </div>
+
 @endsection

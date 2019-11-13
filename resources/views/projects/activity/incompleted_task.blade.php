@@ -1,1 +1,1 @@
-<p class="text-sm">You reset a task</p>
+<p class="text-sm"><span class="text-gray-400 font-light">You  unchecked </span>"{{ $activity->subject->body }}"</p>

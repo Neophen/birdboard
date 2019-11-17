@@ -1,1 +1,1 @@
-<p class="text-sm"><span class="text-gray-500 font-light">You  completed </span>"{{ $activity->subject->body }}"</p>
+<p class="text-sm">"{{ $activity->subject->body }}" <span class="text-gray-500 font-light">{{ __('completed') }}</span></p>

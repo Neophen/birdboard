@@ -2,19 +2,24 @@
 
 namespace Tests\Unit;
 
+use App\Project;
+use App\User;
+use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ActivityTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use RefreshDatabase;
+
+    /** @test **/
+    public function it_has_a_user()
     {
-        $this->assertTrue(true);
+        $user = $this->signIn();
+
+        $project = ProjectFactory::ownedBy($user)->create();
+
+        $this->assertEquals($user->id, $project->activity->first()->user->id);
     }
 }

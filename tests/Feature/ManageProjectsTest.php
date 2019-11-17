@@ -20,6 +20,7 @@ class ManageProjectsTest extends TestCase
 
         $this->get($project->path())->assertRedirect('login');
         $this->patch($project->path())->assertRedirect('login');
+        $this->delete($project->path())->assertRedirect('login');
         $this->get(route('projects.edit', $project))->assertRedirect('login');
         $this->get(route('projects.index'))->assertRedirect('login');
         $this->get(route('projects.create'))->assertRedirect('login');
@@ -49,6 +50,20 @@ class ManageProjectsTest extends TestCase
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
             ->assertSee($attributes['notes']);
+    }
+
+    /** @test **/
+    public function a_user_can_delete_a_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->delete($project->path())
+            ->assertRedirect(route('projects.index'));
+
+        $this->assertDatabaseMissing('projects', $project->only('id'));
     }
 
     /** @test **/
@@ -126,6 +141,16 @@ class ManageProjectsTest extends TestCase
         $project = ProjectFactory::create();
 
         $this->patch($project->path())->assertStatus(403);
+    }
+
+    /** @test **/
+    public function an_authenticated_user_cannot_delete_the_projects_of_others()
+    {
+        $this->signIn();
+
+        $project = ProjectFactory::create();
+
+        $this->delete($project->path())->assertStatus(403);
     }
 
     /** @test **/

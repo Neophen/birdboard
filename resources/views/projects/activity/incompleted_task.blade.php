@@ -1,1 +1,1 @@
-<p class="text-sm"><span class="text-gray-500 font-light">You  unchecked </span>"{{ $activity->subject->body }}"</p>
+<p class="text-sm">"{{ $activity->subject->body }}" <span class="text-gray-500 font-light">{{ __('incompleted task') }}</span></p>

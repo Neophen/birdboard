@@ -25,10 +25,13 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}"
         rel="stylesheet">
+
+    @livewireAssets
 </head>
 
 <body>
-    <div id="app" class="h-full flex flex-col">
+    <div id="app"
+        class="h-full flex flex-col">
         <nav class="flex-no-grow flex items-center justify-between flex-wrap bg-teal-500 px-6 py-2">
             <h1 class="flex items-center flex-shrink-0 text-white mr-6">
                 <svg class="fill-current h-8 w-8 mr-2"
@@ -65,10 +68,10 @@
                     <div class="flex items-center">
 
                         <a class="nav-btn"
-                        href="{{ route('login') }}">{{ __('Login') }}</a>
+                            href="{{ route('login') }}">{{ __('Login') }}</a>
                         @if (Route::has('register'))
                         <a class="nav-btn ml-4"
-                        href="{{ route('register') }}">{{ __('Register') }}</a>
+                            href="{{ route('register') }}">{{ __('Register') }}</a>
                     </div>
                     @endif
                     @else

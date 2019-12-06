@@ -7,8 +7,15 @@
         <p class="text-sm font-light text-gray-500 mr-4"><a
                 href="{{ route('projects.index') }}">{{ __('My projects') }}</a> /
             {{ $project->title }}</p>
-        <a href="{{ route('projects.edit', $project) }}"
-            class="btn text-gray-500">{{ __('Edit Project') }}</a>
+            <div class="flex items-center">
+                @foreach ($project->members as $user)
+                    <img src="{{ gravatarUrl($user->email) }}" alt="{{ $user->name }}'s avatar" title="{{ $user->name }}" class="rounded-full w-8 mr-2">
+                    @endforeach
+                    <img src="{{ gravatarUrl($project->owner->email) }}" alt="{{ $project->owner->name }}'s avatar" title="{{ $project->owner->name }}" class="rounded-full w-8 mr-2">
+                    
+                <a href="{{ route('projects.edit', $project) }}"
+                    class="btn text-gray-500 ml-6">{{ __('Edit Project') }}</a>
+            </div>
     </header>
     <div class="lg:flex -mx-3 items-start">
         <main class="lg:w-3/4 px-3">

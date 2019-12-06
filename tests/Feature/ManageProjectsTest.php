@@ -6,7 +6,6 @@ use App\Project;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ManageProjectsTest extends TestCase
@@ -119,6 +118,16 @@ class ManageProjectsTest extends TestCase
 
         $this->actingAs($project->owner)
             ->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee($project->description);
+    }
+
+    /** @test */
+    public function a_user_can_see_all_projects_they_have_been_invited_to()
+    {
+        $project = tap(ProjectFactory::create())->invite($this->signIn());
+
+        $this->get(route('projects.index'))
             ->assertSee($project->title)
             ->assertSee($project->description);
     }

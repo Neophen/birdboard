@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use App\Project;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Facades\Tests\Setup\ProjectFactory;
 use Tests\TestCase;
 
@@ -49,4 +48,13 @@ class ProjectTest extends TestCase
 
     //     $this->assertDatabaseMissing('projects', $project);
     // }
+
+    /** @test */
+    public function it_can_invite_a_user()
+    {
+        $project = factory(Project::class)->create();
+        $project->invite($user = factory(User ::class)->create());
+
+        $this->assertTrue($project->members->contains($user));
+    }
 }

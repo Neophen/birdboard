@@ -5,7 +5,7 @@
 		</h3>
 	</a>
 	<p title="{{ $project->description }}"
-		class="pt-4 text-gray-500">{{ Illuminate\Support\Str::limit($project->description) }}</p>
+		class="pt-4 text-gray-500">{{ $project->description }}</p>
 	<form action="{{ $project->path() }}"
 		method="post"
 		class="flex justify-end mt-4">

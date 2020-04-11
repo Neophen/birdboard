@@ -44,7 +44,7 @@ class User extends Authenticatable
     public function availableProjects()
     {
         return Project::where('owner_id', $this->id)
-            ->orWhereHas('members', fn ($query) => $query->where('user_id', $this->id))
+            ->orWhereHas('members', function($query) { return $query->where('user_id', $this->id);})
             ->get();
     }
 }
